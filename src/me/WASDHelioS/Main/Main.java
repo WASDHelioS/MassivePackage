@@ -4,7 +4,8 @@
  */
 package me.WASDHelioS.Main;
 
-import me.WASDHelioS.Handler.CommandHandler;
+import java.io.File;
+import java.util.HashMap;
 import me.WASDHelioS.Handler.ConfigHandler;
 import me.WASDHelioS.Handler.SubCommandHandler.CEditHandler;
 import me.WASDHelioS.Handler.SubCommandHandler.EwabHandler;
@@ -13,12 +14,8 @@ import me.WASDHelioS.Handler.SubCommandHandler.PokeHandler;
 import me.WASDHelioS.Listener.CommandPreProcessListener;
 import me.WASDHelioS.Listener.PlayerListener;
 import me.WASDHelioS.Util.Type.PokeType;
-import java.io.File;
-import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -34,7 +31,6 @@ public class Main extends JavaPlugin {
     private CommandPreProcessListener preProcess;
     private PokeType type;
     private final PlayerListener pl = new PlayerListener(this);
-    private CommandHandler ch;
     private final ConfigHandler cfH = new ConfigHandler(this);
     private boolean ewab_isEnabled;
     private boolean poke_isEnabled;
@@ -85,12 +81,7 @@ public class Main extends JavaPlugin {
 
         config = this.getConfig();
         onEnableEss();
-        ch = new CommandHandler(this);
 
-        ch.setEwabHandler(new EwabHandler(this));
-        ch.setMPHandler(new MPHandler(this));
-        ch.setPokeHandler(new PokeHandler(this));
-        ch.setCEditHandler(new CEditHandler(this));
 
         preProcess = new CommandPreProcessListener(this);
 
@@ -99,8 +90,13 @@ public class Main extends JavaPlugin {
         pm.registerEvents(pl, this);
         pm.registerEvents(preProcess, this);
         
+        MPHandler mp = new MPHandler(this);
         
-        
+        getCommand("CEdit").setExecutor(new CEditHandler(this));
+        getCommand("MassivePackage").setExecutor(mp);
+        getCommand("MP").setExecutor(mp);
+        getCommand("Poke").setExecutor(new PokeHandler(this));
+        getCommand("ewab").setExecutor(new EwabHandler(this));
     }
 
     @Override
@@ -135,11 +131,9 @@ public class Main extends JavaPlugin {
     public FileConfiguration getConfiguration() {
         return config;
     }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        return ch.handleCommand(sender, cmd, commandLabel, args);
-
+    
+    public ConfigHandler getConfigHandler() {
+        return cfH;
     }
 
     /**

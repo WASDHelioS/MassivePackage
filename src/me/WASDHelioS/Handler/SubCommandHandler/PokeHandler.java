@@ -4,12 +4,12 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
-import me.WASDHelioS.Handler.CommandHandler;
 import me.WASDHelioS.Util.Type.PokeType;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,12 +17,122 @@ import org.bukkit.entity.Player;
  *
  * @author Nick
  */
-public class PokeHandler extends CommandHandler {
+public class PokeHandler implements CommandExecutor {
 
     private String poke = "[Poke] ";
+    private Main plugin;
 
     public PokeHandler(Main plugin) {
-        super(plugin);
+        this.plugin = plugin;
+    }
+
+    /**
+     * Sends a Poke help message to the sender.
+     *
+     * @param player - Sender
+     */
+    private void sendPokeHelpMessage(CommandSender player) {
+        player.sendMessage(ChatColor.GOLD + "---------------Poke Commands---------------");
+        player.sendMessage(ChatColor.GOLD + "/Poke: Toggles on or off the plugin.");
+        player.sendMessage(ChatColor.GOLD + "/Help | /? : Shows this message dialog.");
+        player.sendMessage(ChatColor.GOLD + "/Poke Normal");
+        player.sendMessage(ChatColor.GOLD + "/Poke N : Turns on / switches to the normal poke mode.");
+        player.sendMessage(ChatColor.GOLD + "/Poke Soft");
+        player.sendMessage(ChatColor.GOLD + "/Poke S : Turns on / switches to the soft poke mode.");
+        player.sendMessage(ChatColor.GOLD + "/Poke Hard");
+        player.sendMessage(ChatColor.GOLD + "/Poke H : Turns on / switches to the hard poke mode.");
+        player.sendMessage(ChatColor.GOLD + "/Poke off : turns off any poke mode.");
+        player.sendMessage(ChatColor.GOLD + "/Poke off [player] : turns off poke mode for specified player.");
+        player.sendMessage(ChatColor.GOLD + "/Poke set [player] [mode] : turns on or off modes for specified player.");
+        player.sendMessage(ChatColor.GOLD + "[mode] : OFF, SOFT, NORMAL, HARD");
+    }
+
+    /**
+     * Toggles the state of the Poke-plugin. If the plugin is enabled, it
+     * disables it. if it is disabled, it will enable it in NORMAL mode.
+     *
+     * @param player - The target.
+     */
+    protected void togglePluginState(Player player) {
+        if (plugin.getHashMap().containsKey(player)) {
+            if (plugin.getHashMap().get(player)) {
+                plugin.getHashMap().put(player, false);
+                plugin.setType(PokeType.OFF);
+                player.sendMessage(ChatColor.RED + poke + "poking is now disabled.");
+            } else {
+                plugin.getHashMap().put(player, true);
+                plugin.setType(PokeType.NORMAL);
+                player.sendMessage(ChatColor.GOLD + poke + "NORMAL poke is now enabled.");
+            }
+        } else {
+            plugin.getHashMap().put(player, true);
+            plugin.setType(PokeType.NORMAL);
+            player.sendMessage(ChatColor.GOLD + poke + "NORMAL poke is now enabled.");
+        }
+    }
+
+    /**
+     * Switches the state of the Poke-plugin.
+     *
+     * @param player - The target.
+     * @param oldType - The mode the target is on now.
+     * @param newType - The mode to which it needs to switch to.
+     */
+    protected void togglePluginState(Player player, PokeType oldType, PokeType newType) {
+        if (plugin.getHashMap().containsKey(player)) {
+            if (plugin.getHashMap().get(player) && oldType != newType) {
+                plugin.setType(newType);
+                player.sendMessage(ChatColor.GOLD + poke + "Poke has now switched from " + oldType.toString() + " to " + newType.toString() + " poke.");
+            } else if (plugin.getHashMap().get(player) && oldType == newType) {
+                player.sendMessage(ChatColor.RED + poke + "Poke is already active on " + oldType.toString());
+            } else {
+                plugin.getHashMap().put(player, true);
+                plugin.setType(newType);
+                player.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled.");
+            }
+        } else {
+            plugin.getHashMap().put(player, true);
+            plugin.setType(newType);
+            player.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled.");
+        }
+    }
+
+    /**
+     * Swtiches the state of the plugin. Capable of sending 2 messages: 1 to the
+     * target, 1 to the sender. If the target IS the sender, it will only send 1
+     * message.
+     *
+     * @param target - The target(PLAYER)
+     * @param sender - The sender.
+     * @param oldType - The mode the target is on now.
+     * @param newType - The mode to which it needs to switch to.
+     */
+    protected void togglePluginState(Player target, CommandSender sender, PokeType oldType, PokeType newType) {
+        if (plugin.getHashMap().containsKey(target)) {
+            if (plugin.getHashMap().get(target) && oldType != newType) {
+                plugin.setType(newType);
+                target.sendMessage(ChatColor.GOLD + poke + "Poke has now switched from " + oldType.toString() + " to " + newType.toString() + " poke.");
+                if (target != sender) {
+                    sender.sendMessage(ChatColor.GOLD + poke + "Poke has switched from " + oldType.toString() + " to " + newType.toString() + " poke for " + target.getName() + ".");
+                }
+            } else if (plugin.getHashMap().get(target) && oldType == newType) {
+                sender.sendMessage(ChatColor.RED + poke + "Poke is already active on " + oldType.toString() + " for " + target.getName() + ".");
+            } else {
+                plugin.getHashMap().put(target, true);
+                plugin.setType(newType);
+                target.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled.");
+                if (target != sender) {
+                    sender.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled for " + target.getName() + ".");
+                }
+            }
+        } else {
+            plugin.getHashMap().put(target, true);
+            plugin.setType(newType);
+            target.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled.");
+            if (target != sender) {
+                sender.sendMessage(ChatColor.GOLD + poke + newType.toString() + " poke is now enabled for " + target.getName() + ".");
+            }
+        }
     }
 
     /**
@@ -69,8 +179,7 @@ public class PokeHandler extends CommandHandler {
                         } else {
                             player.sendMessage(ChatColor.RED + poke + "Poking is already disabled!");
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
+                    } else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
                         sendPokeHelpMessage(sender);
                     } else {
                         sender.sendMessage(ChatColor.RED + "This command does not exist!");
@@ -159,5 +268,20 @@ public class PokeHandler extends CommandHandler {
             sender.sendMessage(ChatColor.RED + "This command does not exist!");
 
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("Poke")) {
+            if (plugin.isPokeEnabled()) {
+
+                this.handlePokeCommand(sender, cmd, commandLabel, args);
+            } else {
+                sender.sendMessage(ChatColor.RED + poke + "[Poke] is not able to respond, because it's turned off in the config file.");
+            }
+
+            return true;
+        }
+        return false;
     }
 }

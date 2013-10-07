@@ -15,8 +15,9 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class ConfigHandler {
 
-    List<String> e = new ArrayList<>();
-    List<String> c = new ArrayList<>();
+    private List<String> e = new ArrayList<>();
+    private List<String> c = new ArrayList<>();
+    private Main plugin;
 
     public ConfigHandler(Main pl) {
         e.add("BALL");
@@ -42,6 +43,8 @@ public class ConfigHandler {
         c.add("TEAL");
         c.add("WHITE");
         c.add("YELLOW");
+
+        this.plugin = pl;
     }
 
     /**
@@ -151,5 +154,10 @@ public class ConfigHandler {
 
 
         return false;
+    }
+
+    public void reloadCommands() {
+        plugin.reloadConfigAlt();
+        plugin.onEnableEss();
     }
 }

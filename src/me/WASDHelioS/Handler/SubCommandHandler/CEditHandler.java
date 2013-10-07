@@ -4,7 +4,6 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
-import me.WASDHelioS.Handler.CommandHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,6 +13,7 @@ import java.util.logging.Logger;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -21,24 +21,42 @@ import org.bukkit.configuration.file.FileConfiguration;
  *
  * @author Nick
  */
-public class CEditHandler extends CommandHandler {
+public class CEditHandler implements CommandExecutor {
 
+    private Main plugin;
     private String CEdit = "[CEdit] ";
 
     public CEditHandler(Main plugin) {
-        super(plugin);
+        this.plugin = plugin;
     }
 
+    /**
+     * Gets the fromcommand list.
+     *
+     * @param config the current configuration.
+     * @return A string list with tocommands.
+     */
     private List<String> getFromCommandsList(FileConfiguration config) {
         List<String> fromCommandList = config.getStringList("cedit.fromcommand");
         return fromCommandList;
     }
 
+    /**
+     * Gets the tocommand list.
+     *
+     * @param config the current configuration.
+     * @return A String list with tocommands.
+     */
     private List<String> getToCommandsList(FileConfiguration config) {
         List<String> toCommandList = config.getStringList("cedit.tocommand");
         return toCommandList;
     }
 
+    /**
+     * sends a joined list of commands.
+     *
+     * @param sender The sender of the initial command.
+     */
     private void sendList(CommandSender sender) {
         FileConfiguration config = plugin.getConfig();
         List<String> fromCommandList = getFromCommandsList(config);
@@ -46,13 +64,18 @@ public class CEditHandler extends CommandHandler {
 
         if (fromCommandList.size() == toCommandList.size()) {
             for (int i = 0; i < fromCommandList.size(); i++) {
-                sender.sendMessage(ChatColor.GOLD + CEdit + ChatColor.GRAY + (i + 1) + " : from " + fromCommandList.get(i) + " to " + toCommandList.get(i));
+                sender.sendMessage(ChatColor.GOLD + CEdit + ChatColor.GRAY + (i + 1) + " from -  " + fromCommandList.get(i) + " to - " + toCommandList.get(i));
             }
         } else {
             sender.sendMessage(ChatColor.RED + CEdit + "ERROR! FromCommand and ToCommand aren't the same size. check the config file and fix this!");
         }
     }
 
+    /**
+     * adds a command to the fromcommand list.
+     *
+     * @param fromcommand the command
+     */
     private void addFromCommand(String fromcommand) {
         List<String> fromlist = getFromCommandsList(plugin.getConfiguration());
         fromlist.add(fromcommand);
@@ -60,12 +83,23 @@ public class CEditHandler extends CommandHandler {
 
     }
 
+    /**
+     * adds a command to the tocommand list.
+     *
+     * @param tocommand the command
+     */
     private void addToCommand(String tocommand) {
         List<String> tolist = getToCommandsList(plugin.getConfiguration());
         tolist.add(tocommand);
         plugin.getConfiguration().set("cedit.tocommand", tolist);
     }
 
+    /**
+     * removes commands based on fromCommand. removes the command of tocommand
+     * with the same index.
+     *
+     * @param fromCommand the command you want deleted.
+     */
     private void removeFromCommand(String fromCommand) {
         List<String> fromlist = getFromCommandsList(plugin.getConfiguration());
         List<String> tolist = getToCommandsList(plugin.getConfiguration());
@@ -77,6 +111,12 @@ public class CEditHandler extends CommandHandler {
         plugin.getConfiguration().set("cedit.tocommand", tolist);
     }
 
+    /**
+     * removes commands based on toCommand. removes the command of fromcommand
+     * with the same index.
+     *
+     * @param toCommand the command you want deleted.
+     */
     private void removeToCommand(String toCommand) {
         List<String> fromlist = getFromCommandsList(plugin.getConfiguration());
         List<String> tolist = getToCommandsList(plugin.getConfiguration());
@@ -88,6 +128,17 @@ public class CEditHandler extends CommandHandler {
         plugin.getConfiguration().set("cedit.tocommand", tolist);
     }
 
+    /**
+     *
+     * Replaces commands if possible. The lengths of the lists fromcommand and
+     * tocommand constitutes if its possible or not. : are they equal, then its
+     * possible, if not its not.
+     *
+     * @param fromCommand fromcommand which should be in the list
+     * @param toCommand tocommand which should be in the list
+     * @param fromNewCommand new fromcommand which will replace the old one.
+     * @param toNewCommand new tocommand which will replace the old one.
+     */
     private void replaceCommand(String fromCommand, String toCommand, String fromNewCommand, String toNewCommand) {
         List<String> fromList = getFromCommandsList(plugin.getConfiguration());
         List<String> toList = getToCommandsList(plugin.getConfiguration());
@@ -178,6 +229,15 @@ public class CEditHandler extends CommandHandler {
         return command;
     }
 
+    /**
+     * Checks if a certain keyword exists in the given list of arguments. if it
+     * does, return true. else return false.
+     *
+     * @param keyword The keyword of which you want to know exists in the
+     * arguments.
+     * @param arguments The arguments which the sender sent.
+     * @return
+     */
     private boolean checkIfKeywordExists(String keyword, String[] arguments) {
 
         List<String> args = Arrays.asList(arguments);
@@ -191,6 +251,13 @@ public class CEditHandler extends CommandHandler {
         return false;
     }
 
+    /**
+     * Checks if the tocommand actually exists in the list of cedit.tocommand.
+     * if so, it returns true. else it will return false.
+     *
+     * @param toc The command from tocommand you want checked.
+     * @return true if it exists; false if it doesnt.
+     */
     private boolean checkIfToCommandExists(String toc) {
 
         for (int i = 0; i < getToCommandsList(plugin.getConfiguration()).size(); i++) {
@@ -201,6 +268,13 @@ public class CEditHandler extends CommandHandler {
         return false;
     }
 
+    /**
+     * Checks if the fromcommand actually exists in the list of
+     * cedit.fromcommand. if so, it returns true. else it will return false.
+     *
+     * @param fromc The command from fromcommand you want checked.
+     * @return true if it exists; false if it doesnt.
+     */
     private boolean checkIfFromCommandExists(String fromc) {
 
         for (int i = 0; i < getFromCommandsList(plugin.getConfiguration()).size(); i++) {
@@ -211,7 +285,7 @@ public class CEditHandler extends CommandHandler {
         return false;
     }
 
-    public void handleCEditCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+    private void handleCEditCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         if (sender.hasPermission("helios.opCommands")) {
             if (args.length < 1) {
                 sender.sendMessage(ChatColor.GOLD + CEdit + "CEdit command editor. type /CEdit help or /CEdit ? for commands.");
@@ -285,7 +359,7 @@ public class CEditHandler extends CommandHandler {
                                 saveConfiguration();
                                 sender.sendMessage(ChatColor.GOLD + CEdit + "fromc " + getCommandArgs("fromc", "toc", args) + " toc "
                                         + getCommandArgs("toc", "newfromc", args) + " changed to fromc " + getCommandArgs("newfromc", "newtoc", args) + " toc " + getCommandArgs("newtoc", args));
-                            } else { 
+                            } else {
                                 sender.sendMessage(ChatColor.GOLD + CEdit + ChatColor.RED + "You cannot use empty commands");
                             }
                         } else {
@@ -318,5 +392,32 @@ public class CEditHandler extends CommandHandler {
             Logger.getLogger(CEditHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         plugin.reloadConfigAlt();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+
+        if (cmd.getName().equalsIgnoreCase("CEdit")) {
+            if (plugin.isCeditEnabled()) {
+                this.handleCEditCommand(sender, cmd, commandLabel, args);
+            } else {
+                sender.sendMessage(ChatColor.RED + "[CEdit] is not able to respond, because it's turned off in the config file.");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void sendCEditHelpMessage(CommandSender sender) {
+        sender.sendMessage(ChatColor.GOLD + "---------------CEdit Commands---------------");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit : sends a useless message.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit help : Shows this help message.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit ? : Alias for help/");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit list : returns a list of all from and to commands.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit add fromc [command] toc [command] : Adds a command.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit edit fromc [command] toc [command] newfromc [command] newtoc [command] : edits a command. first from and to : "
+                + "the registered commands. second from and to : the command to replace them with.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit remove fromc [fromCommand] : removes the command based on the fromcommand.");
+        sender.sendMessage(ChatColor.GOLD + "/CEdit remove toc [toCommand] : removes the command based on the toCommand.");
     }
 }

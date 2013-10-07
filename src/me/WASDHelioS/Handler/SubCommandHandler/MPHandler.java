@@ -4,11 +4,12 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
-import me.WASDHelioS.Handler.CommandHandler;
+import me.WASDHelioS.Handler.ConfigHandler;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,10 +17,23 @@ import org.bukkit.entity.Player;
  *
  * @author Nick
  */
-public class MPHandler extends CommandHandler {
+public class MPHandler implements CommandExecutor {
+
+    private Main plugin;
 
     public MPHandler(Main plugin) {
-        super(plugin);
+        this.plugin = plugin;
+    }
+
+    /**
+     * Sends a MassivePackage help message to the sender.
+     *
+     * @param player - Sender
+     */
+    protected void sendMPHelpMessage(CommandSender player) {
+        player.sendMessage(ChatColor.GOLD + "---------------MassivePackage Global Commands---------------");
+        player.sendMessage(ChatColor.GOLD + "/MassivePackage reload (/mp reload): reloads config file.");
+        player.sendMessage(ChatColor.GOLD + "/MassivePackage resetconfig : resets the config file.");
     }
 
     /**
@@ -42,7 +56,7 @@ public class MPHandler extends CommandHandler {
                             sender.sendMessage(ChatColor.DARK_RED + "[MassivePackage] Reloading..");
                         }
                     }
-                    reloadCommands();
+                    plugin.getConfigHandler().reloadCommands();
 
                     for (Player player : Bukkit.getOnlinePlayers()) {
 
@@ -68,5 +82,14 @@ public class MPHandler extends CommandHandler {
         } else {
             sender.sendMessage("You do not have permission!");
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("MassivePackage") || cmd.getName().equalsIgnoreCase("mp")) {
+            this.handleMPCommand(sender, cmd, commandLabel, args);
+            return true;
+        }
+        return false;
     }
 }
