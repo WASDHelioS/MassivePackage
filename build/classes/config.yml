@@ -1,0 +1,124 @@
+# +-------------------------------------------------------------------+
+# <                      HELIOS' MASSIVE PACKAGE                      >
+# <                       STANDARD CONFIG FILE                        >
+# +-------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# <                        PLUGIN STATUS SECTION                      >
+# <            Enables or disables plugin from this pack              >
+# <                       HAS TO BE TRUE OR FALSE!                    >
+# +-------------------------------------------------------------------+
+enabled:
+  ewab: true
+  poke: true
+  cedit: true
+
+# +-------------------------------------------------------------------+
+# <                           POKE SECTION                            >
+# <               Sets the strength of a given poke.                  >
+# +-------------------------------------------------------------------+
+
+poke:
+  soft: 1
+  normal: 2
+  hard: 3
+
+
+# +-------------------------------------------------------------------+
+# <                           EWAB SECTION                            >
+# <              Control the EnterWithABang plugin.                   >
+# <            Here you can increase the amount of rockets,           >
+# <        Change the effects, the colors, all sorts of things!       >
+# +-------------------------------------------------------------------+
+
+# +--------------------------------------------------------------------------------------+
+# <                                      PARAMETERS                                      >
+# <  world - The world in which the fireworks should go off when a new player joins.     >
+# <        amount - The amount of fireworks fired (Minimum of 1, maximum of 8).          >
+# <  offset - The radius (in blocks) around the player from where the fireworks launch   >
+# <          power - This determines the travel time (1 power equals ~ 0.5 seconds)      >
+# <             rocketeffect - The effect which the specified rocket will have.          >
+# <              rocketcolor - The color which the specified rocket will have.           >
+# <           rocketfade - The fading color which the specified rocket will have.        >
+# <           delay - A delay on when the fireworks will launch (delay in ticks.)        >
+# +--------------------------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# <                           POSSIBLE EFFECTS                        >
+# <                           - BALL                                  >
+# <                           - BALL_LARGE                            >
+# <                           - BURST                                 >
+# <                           - CREEPER                               >
+# <                           - STAR                                  >
+# +-------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# <                           POSSIBLE COLORS                         > 
+# <                           - AQUA                                  >
+# <                           - BLACK                                 >
+# <                           - BLUE                                  >
+# <                           - FUCHSIA                               >
+# <                           - GRAY                                  >
+# <                           - GREEN                                 >
+# <                           - LIME                                  >
+# <                           - MAROON                                >
+# <                           - NAVY                                  >
+# <                           - OLIVE                                 >
+# <                           - ORANGE                                >
+# <                           - PURPLE                                >
+# <                           - RED                                   >
+# <                           - SILVER                                >
+# <                           - TEAL                                  >
+# <                           - WHITE                                 >
+# <                           - YELLOW                                >
+# +-------------------------------------------------------------------+
+
+
+ewab: 
+  world: world
+  amount: 4
+  offset: 2
+  power: 1
+  rocketeffect:
+  - CREEPER
+  - CREEPER
+  - CREEPER
+  - CREEPER
+  rocketcolor: 
+  - GREEN
+  - GREEN
+  - GREEN
+  - GREEN
+  rocketfade:
+  - RED
+  - RED
+  - RED
+  - RED
+  delay: 70
+  
+
+# +-------------------------------------------------------------------+
+# <                         CommandEdit                               >
+# <              A plugin which lets you map new commands             >
+# <                      to existing ones.
+# +-------------------------------------------------------------------+
+
+# +-------------------------------------------------------------------+
+# <                           PARAMETERS                              >
+# <        FromCommand : The command you want to be executed.         >
+# <          ToCommand : The command you want to type.                >
+# +-------------------------------------------------------------------+
+
+cedit:
+  fromcommand:
+    - warp shop
+    - warp hub
+  tocommand:
+    - shop
+    - hub
+    
+FSwearing:
+  words:
+    - fuck
+    - shit
+  message: no swearing allowed'!'
