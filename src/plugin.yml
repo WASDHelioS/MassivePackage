@@ -1,0 +1,131 @@
+main: me.WASDHelioS.Main.Main
+name: HelioSMassivePackage
+version: 1.01
+author: HelioS_HT
+description: -A collection of plugins.-
+commands:
+  
+  MassivePackage:
+    description: placeholder
+  MP:
+    description: placeholder
+  MassivePackage reload:
+    description: reloads the config file of the plugin.
+    usage: /massivePackage reload
+  MP reload:
+    description: same as above.
+    usave: /MP reload
+  MassivePackage Help:
+    desc: sends you help file.
+    usage: /massivepackage help
+  MP Help:
+    desc: sends you help file.
+    usage: /mp help
+  MassivePackage ?:
+    description: sends you help file.
+    usage: /massivepackage ?
+  MP ?:
+    description: sends you help file.
+    usage: /mp ?
+  MassivePackage resetConfig:
+    description: resets your config.
+    usage: /MassivePackage resetconfig
+  MP resetConfig:
+    description: resets your config.
+    usage: /MassivePackage resetConfig
+  
+  #Poke
+  Poke:
+    description: Toggles Poking.
+    usage: /Poke
+  Poke Help:
+    description: Sends poke help messages.
+    usage: /Poke Help
+  Poke ?:
+    description: Same as help
+    usage: /Poke ?
+    
+  Poke Soft:
+    description: Activates / switches to soft poking.
+    usage: /Poke Soft
+  Poke S:
+    description: Same as Soft
+    usage: /Poke S
+  Poke Normal:
+    description: Activates / switches to normal poking.
+    usage: /Poke Normal
+  Poke N:
+    description: Same as Normal.
+    usage: /Poke N
+  Poke Hard:
+    description: Activates / switches to hard poking.
+    usage: /Poke Hard
+  Poke H:
+    description: Same as Hard.
+    usage: /Poke H
+  Poke Off: 
+    description: Deactivates poking.
+    usage: /Poke Off
+  Poke Off [player]:
+    description: Deactivates poking for a user.
+    usage: /Poke Off [player]
+  Poke set [player] [mode]:
+    description: Sets a poke mode for a user.
+    usage: /Poke set [Player]
+  EnterWithABang:
+    description: something
+    usage: /EnterWithABang
+    
+    
+  ewab:
+    description: somethingelse
+    usage: /ewab
+    
+  cedit:
+    description: placeholder
+    usage: /cedit
+    
+  cedit help:
+    description: returns help message
+    usage: /cedit help
+  cedit ?:
+    description: returns help message
+    usage: /cedit ?
+  cedit list:
+    description: returns a list of all commands.
+    usage: /cedit list
+  cedit add fromc [fromcommand] toc [tocommand]:
+    description: adds a new command from + to
+    usage: /cedit add from [fromcommand] to [tocommand]
+  cedit edit fromc [fromcommand] toc [tocommand] newfromc [fromcommand] newtoc [tocommand]:
+    description: edits a command to something else.
+    usage: /cedit edit /[fromcommand] /[tocommand] /[newFromcommand] /[newTocommand]
+  cedit remove fromc [fromcommand]:
+    description: removes the fromcommand and tocommand based on fromcommand.
+    usage: /cedit remove from [fromcommand]
+  cedit remove toc [tocommand]:
+    description: removes the tocommand and fromcommand based on tocommand.
+    usage: /cedit remove to [tocommand]
+    #OTHER
+    
+    
+    ##PERMISSIONS##
+    
+permissions:
+  helios.*:
+    description: Gives access to all commands
+    children:
+      helios.standardUse: true
+      helios.manipulationUse: true
+      helios.opCommands: true
+  helios.standardUse:
+    description: the standard toggle and stuff for poke.
+    default: true
+  helios.manipulationUse:
+    description: manipulation of other players' poke function.
+    default: op
+  helios.opCommands:
+    description: all the other commands plebians should not be able to use.
+    default: op
+    
+      
