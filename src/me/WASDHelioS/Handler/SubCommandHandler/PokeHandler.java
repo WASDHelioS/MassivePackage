@@ -4,8 +4,9 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
-import me.WASDHelioS.Util.Type.PokeType;
+import me.WASDHelioS.Handler.CommandHandler;
 import me.WASDHelioS.Main.Main;
+import me.WASDHelioS.Util.Type.PokeType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,12 +18,13 @@ import org.bukkit.entity.Player;
  *
  * @author Nick
  */
-public class PokeHandler implements CommandExecutor {
+public class PokeHandler extends CommandHandler implements CommandExecutor {
 
     private String poke = "[Poke] ";
     private Main plugin;
 
     public PokeHandler(Main plugin) {
+        super();
         this.plugin = plugin;
     }
 

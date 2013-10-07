@@ -33,7 +33,12 @@ commands:
   MP resetConfig:
     description: resets your config.
     usage: /MassivePackage resetConfig
-  
+  MassivePackage Toggle [plugin]:
+    description: Toggles a plugin on or off.
+    usage: /MassivePackage toggle [plugin]
+  MP Toggle [plugin]:
+    description: Same as above.
+    usage: /MP toggle [plugin]
   #Poke
   Poke:
     description: Toggles Poking.

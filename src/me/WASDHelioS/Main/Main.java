@@ -46,9 +46,6 @@ public class Main extends JavaPlugin {
      */
     public void onEnableEss() {
 
-
-        
-        
         createConfig();
         reloadConfig();
         getLogger().info("[MassivePackage] is now ENABLED.");
@@ -72,6 +69,13 @@ public class Main extends JavaPlugin {
             getLogger().info("[EnterWithABang] is disabled. To change this, edit the config file.");
         }
         
+        config.options().copyDefaults(true);
+        saveDefaultConfig();
+    }
+    
+    public void onEnableNoSending() {
+        createConfig();
+        reloadConfig();
         config.options().copyDefaults(true);
         saveDefaultConfig();
     }

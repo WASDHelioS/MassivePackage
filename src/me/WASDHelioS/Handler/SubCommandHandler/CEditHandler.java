@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.WASDHelioS.Handler.CommandHandler;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,12 +22,13 @@ import org.bukkit.configuration.file.FileConfiguration;
  *
  * @author Nick
  */
-public class CEditHandler implements CommandExecutor {
+public class CEditHandler extends CommandHandler implements CommandExecutor {
 
     private Main plugin;
     private String CEdit = "[CEdit] ";
 
     public CEditHandler(Main plugin) {
+        super();
         this.plugin = plugin;
     }
 
@@ -303,7 +305,7 @@ public class CEditHandler implements CommandExecutor {
                             addFromCommand(getCommandArgs("fromc", "toc", args));
                             addToCommand(getCommandArgs("toc", args));
 
-                            saveConfiguration();
+                            saveConfiguration(plugin);
 
                             sender.sendMessage(ChatColor.GOLD + CEdit + "Command added : from " + getCommandArgs("fromc", "toc", args) + " to " + getCommandArgs("toc", args));
                         } else {
@@ -318,7 +320,7 @@ public class CEditHandler implements CommandExecutor {
                             if (!getCommandArgs("fromc", args).equalsIgnoreCase("")) {
 
                                 removeFromCommand(getCommandArgs("fromc", args));
-                                saveConfiguration();
+                                saveConfiguration(plugin);
 
                                 sender.sendMessage(ChatColor.GOLD + CEdit + "FromCommand " + getCommandArgs("fromc", args) + " and the corresponding tocommand have been removed!");
                             } else {
@@ -333,7 +335,7 @@ public class CEditHandler implements CommandExecutor {
                             if (!getCommandArgs("toc", args).equalsIgnoreCase("")) {
 
                                 removeToCommand(getCommandArgs("toc", args));
-                                saveConfiguration();
+                                saveConfiguration(plugin);
 
                                 sender.sendMessage(ChatColor.GOLD + CEdit + "ToCommand " + getCommandArgs("toc", args) + " and the corresponding fromcommand have been removed!");
                             } else {
@@ -356,7 +358,7 @@ public class CEditHandler implements CommandExecutor {
                                 replaceCommand(getCommandArgs("fromc", "toc", args), getCommandArgs("toc", "newfromc", args),
                                         getCommandArgs("newfromc", "newtoc", args), getCommandArgs("newtoc", args));
 
-                                saveConfiguration();
+                                saveConfiguration(plugin);
                                 sender.sendMessage(ChatColor.GOLD + CEdit + "fromc " + getCommandArgs("fromc", "toc", args) + " toc "
                                         + getCommandArgs("toc", "newfromc", args) + " changed to fromc " + getCommandArgs("newfromc", "newtoc", args) + " toc " + getCommandArgs("newtoc", args));
                             } else {
@@ -380,18 +382,6 @@ public class CEditHandler implements CommandExecutor {
         } else {
             sender.sendMessage(ChatColor.RED + "You do not have permission!");
         }
-    }
-
-    private void saveConfiguration() {
-        File file = new File(plugin.getDataFolder(), "config.yml");
-        try {
-            plugin.getConfiguration().save(file);
-
-
-        } catch (IOException ex) {
-            Logger.getLogger(CEditHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        plugin.reloadConfigAlt();
     }
 
     @Override

@@ -160,4 +160,9 @@ public class ConfigHandler {
         plugin.reloadConfigAlt();
         plugin.onEnableEss();
     }
+    
+    public void reloadCommandsAlt() {
+        plugin.reloadConfigAlt();
+        plugin.onEnableNoSending();
+    }
 }

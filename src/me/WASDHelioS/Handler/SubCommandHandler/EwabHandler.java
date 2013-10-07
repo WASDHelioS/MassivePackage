@@ -4,6 +4,7 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
+import me.WASDHelioS.Handler.CommandHandler;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,11 +15,12 @@ import org.bukkit.command.CommandSender;
  *
  * @author Nick
  */
-public class EwabHandler implements CommandExecutor {
+public class EwabHandler extends CommandHandler implements CommandExecutor {
 
     private Main plugin;
 
     public EwabHandler(Main plugin) {
+        super();
         this.plugin = plugin;
     }
 

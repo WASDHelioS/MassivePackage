@@ -4,7 +4,7 @@
  */
 package me.WASDHelioS.Handler.SubCommandHandler;
 
-import me.WASDHelioS.Handler.ConfigHandler;
+import me.WASDHelioS.Handler.CommandHandler;
 import me.WASDHelioS.Main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,11 +17,12 @@ import org.bukkit.entity.Player;
  *
  * @author Nick
  */
-public class MPHandler implements CommandExecutor {
-
+public class MPHandler extends CommandHandler implements CommandExecutor {
+    private String MP = "[MassivePackage] ";
     private Main plugin;
 
     public MPHandler(Main plugin) {
+        super();
         this.plugin = plugin;
     }
 
@@ -34,8 +35,27 @@ public class MPHandler implements CommandExecutor {
         player.sendMessage(ChatColor.GOLD + "---------------MassivePackage Global Commands---------------");
         player.sendMessage(ChatColor.GOLD + "/MassivePackage reload (/mp reload): reloads config file.");
         player.sendMessage(ChatColor.GOLD + "/MassivePackage resetconfig : resets the config file.");
+        player.sendMessage(ChatColor.GOLD + "/MassivePackage toggle [pluginname] : toggles a plugin on or off.");
     }
 
+    private boolean togglePlugin(String plugin) {
+        
+        String path = "enabled."+plugin;
+        
+        if(this.plugin.getConfiguration().contains(path))
+        {
+            if(this.plugin.getConfiguration().getBoolean(path)) {
+                this.plugin.getConfiguration().set(path, false);
+            } else {
+                this.plugin.getConfiguration().set(path, true);
+            }
+            saveConfiguration(this.plugin);
+            return true;
+        }
+        
+        return false;
+    }
+    
     /**
      *
      * Handles all possible MassivePackage commands (THERE HAS TO BE A BETTER
@@ -48,7 +68,10 @@ public class MPHandler implements CommandExecutor {
      */
     public void handleMPCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         if (sender.hasPermission("helios.opCommands")) {
-            if (args.length - 1 == 0) {
+            if(args.length < 1) {
+                sender.sendMessage(ChatColor.GOLD + MP + "Type /MP Help or /MP ? for more options.");
+            } 
+            else if (args.length  == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     for (Player player : Bukkit.getOnlinePlayers()) {
 
@@ -61,7 +84,7 @@ public class MPHandler implements CommandExecutor {
                     for (Player player : Bukkit.getOnlinePlayers()) {
 
                         if (player.hasPermission("helios.opCommands")) {
-                            sender.sendMessage(ChatColor.GREEN + "[MassivePackage] Reloaded!");
+                            sender.sendMessage(ChatColor.GREEN + MP + "Reloaded!");
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
@@ -70,13 +93,33 @@ public class MPHandler implements CommandExecutor {
                     plugin.resetConfig();
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         if (player.hasPermission("helios.opCommands")) {
-                            player.sendMessage(ChatColor.GREEN + "[MassivePackage] Configuration file has been reset!");
+                            player.sendMessage(ChatColor.GREEN + MP + "Configuration file has been reset!");
                         }
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "This command does not exist!");
                 }
-            } else {
+            } else if(args.length == 2) {
+                if(args[0].equalsIgnoreCase("toggle")) {
+                    boolean hasToggled = togglePlugin(args[1]);
+                    if(hasToggled) {
+                        
+                        String enabled = "";
+                        if(plugin.getConfiguration().getBoolean("enabled."+args[1])) {
+                            enabled = "enabled!";
+                        } else {
+                            enabled = "disabled!";
+                        }
+                        sender.sendMessage(ChatColor.GOLD + MP + ChatColor.GREEN +"[" + args[1] + "] is now " + enabled);
+                        plugin.getConfigHandler().reloadCommandsAlt();
+                        
+                    } else {
+                        sender.sendMessage(ChatColor.GOLD + MP + ChatColor.RED + "This plugin does not exist!");
+                    }
+                }
+            }
+            
+            else {
                 sender.sendMessage(ChatColor.RED + "This command does not exist!");
             }
         } else {
